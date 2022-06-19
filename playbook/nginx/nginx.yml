@@ -6,26 +6,35 @@
       update_cache: yes
       cache_valid_time: 3600
 
-  - name: "install nginx"
+  - name: "Install nginx"
     apt:
       name: ['nginx']
       state: latest
 
-  - name: "create www directory"
+  - name: "Create DocumentRoot"
     file:
       path: /var/www/html/{{ domain }}
       state: directory
       mode: '0775'
-      owner: "{{ web_user }}"
-      group: "{{ web_user }}"
+      owner: "root"
+      group: "root"
 
-  - name: delete default nginx site
+  - name: "Sync website"
+    synchronize:
+      src: files/
+      dest: /var/www/html/{{ domain }}
+      archive: no
+      checksum: yes
+      recursive: yes
+      delete: yes
+
+  - name: "Delete default nginx site"
     file:
       path: /etc/nginx/sites-enabled/default
       state: absent
     notify: restart nginx
 
-  - name: copy nginx site.conf
+  - name: "Copy conf"
     template:
       src: site.conf.j2
       dest: /etc/nginx/sites-enabled/{{ domain }}
@@ -34,14 +43,6 @@
       mode: '0644'
     notify: restart nginx
 
-  - name: "sync website"
-    synchronize:
-      src: files/
-      dest: /var/www/html/{{ domain }}
-      archive: no
-      checksum: yes
-      recursive: yes
-      delete: yes
 
   handlers:
     - name: restart nginx

@@ -1,10 +1,10 @@
 ---
   web:
     hosts:
-      172.31.22.227
+      172.31.8.163
     vars:
       ssh_user: ubuntu
-      ssh_key: /home/ubuntu/.ssh/ansible_rsa
+      ssh_key: /home/ubuntu/ansible/setupscripts/remote_pvt
       web_port: 80
       web_user: ubuntu
       domain: mytestdomain.com
