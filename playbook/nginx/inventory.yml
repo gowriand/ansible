@@ -1,0 +1,10 @@
+---
+  web:
+    hosts:
+      172.31.22.227
+    vars:
+      ssh_user: ubuntu
+      ssh_key: /home/ubuntu/.ssh/id_rsa 
+      web_port: 80
+      web_user: ubuntu
+      domain: mytestdomain.com
