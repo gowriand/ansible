@@ -1,6 +1,6 @@
 server {
-  listen {{ web_port }}; 
-  listen [::]:{{ web_port }};
+  listen {{ http_port }}; 
+  listen [::]:{{ http_port }};
   server_name {{ domain }};
   root /var/www/html/{{ domain }};
   location / {
