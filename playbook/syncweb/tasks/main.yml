@@ -1,0 +1,38 @@
+---
+# tasks file for syncweb
+
+   - name: "apt-get update"
+    apt:
+      update_cache: yes
+      cache_valid_time: 3600
+
+  - name: "Install nginx"
+    apt:
+      name: ['nginx']
+      state: latest
+
+  - name: "Create DocumentRoot"
+    file:
+      path: /var/www/html/{{ domain }}
+      state: directory
+      mode: '0775'
+      owner: "{{ http_user }}"
+      group: "{{ http_user }}"
+
+  - name: "Sync website"
+    synchronize:
+      src: files/
+      dest: /var/www/html/{{ domain }}
+      archive: no
+      checksum: yes
+      recursive: yes
+      deletei: yes
+
+  - name: "Copy conf"
+    template:
+      src: site.conf.j2
+      dest: /etc/nginx/sites-enabled/{{ domain }}
+      owner: "{{ http_user }}"
+      group: "{{ http_user }}"
+      mode: '0644'
+    notify: restart nginx

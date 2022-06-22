@@ -1,0 +1,7 @@
+---
+# vars file for syncweb
+#       
+  
+http_port: 80
+http_user: root
+domain: mytestdomain.com

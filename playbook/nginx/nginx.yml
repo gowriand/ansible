@@ -11,41 +11,44 @@
       name: ['nginx']
       state: latest
 
-  - name: "Create DocumentRoot"
+  - name: "Create DocumentRoot of {{ item }}"
     file:
-      path: /var/www/html/{{ domain }}
+      path: /var/www/html/{{ item }}
       state: directory
       mode: '0775'
       owner: "{{ http_user }}"
       group: "{{ http_user }}"
+    with_items:
+      - "{{ domains }}"
 
-  - name: "Sync website"
+  - name: "Sync website {{ item }}"
     synchronize:
-      src: files/
-      dest: /var/www/html/{{ domain }}
+      src: files/{{ item }}
+      dest: /var/www/html/{{ item }}
       archive: no
       checksum: yes
       recursive: yes
       delete: yes
+    with_items:
+      - "{{ domains }}"
 
-  - name: "Delete default nginx site"
-    file:
-      path: /etc/nginx/sites-enabled/default
-      state: absent
-    notify: restart nginx
-
-  - name: "Copy conf"
+  - name: "Copy conf {{ item }}"
     template:
       src: site.conf.j2
-      dest: /etc/nginx/sites-enabled/{{ domain }}
+      dest: /etc/nginx/sites-enabled/{{ item }}
       owner: "{{ http_user }}"
       group: "{{ http_user }}"
       mode: '0644'
-    notify: restart nginx
+    with_items:
+      - "{{ domains }}"
 
 
-  handlers:
-    - name: restart nginx
-      service:
-        name: nginx
-        state: restarted
+  - name: restart nginx
+    service:
+      name: nginx
+      state: restarted
+    become: true
+    register: service_output
+
+      
+  - debug: var=service_output

@@ -1,8 +1,8 @@
 server {
   listen {{ http_port }}; 
   listen [::]:{{ http_port }};
-  server_name {{ item }};
-  root /var/www/html/{{ item }};
+  server_name {{ domain }};
+  root /var/www/html/{{ domain }};
   location / {
     try_files $uri $uri/ =404;
   }
