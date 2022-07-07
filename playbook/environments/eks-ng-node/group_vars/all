@@ -1,0 +1,2 @@
+env: eks-ng-node
+env_host_name: ec2-107-21-136-36.compute-1.amazonaws.com

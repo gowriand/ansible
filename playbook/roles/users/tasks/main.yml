@@ -1,0 +1,17 @@
+- name: Create users
+  user: name={{ item.username}} shell="/bin/bash" createhome=yes generate_ssh_key=yes ssh_key_bits=4096 ssh_key_file=.ssh/id_rsa
+  with_items: '{{users}}'
+
+
+- name: Setup | authorized key upload
+  authorized_key: user={{ item.username }} key="{{ lookup('file', 'files/{{ item.username }}.pub') }}"
+  with_items: '{{users}}'
+
+- name: Sudoers | update sudoers file and validate
+  lineinfile: "dest=/etc/sudoers insertafter=EOF line='{{ item.username }} ALL=(ALL) NOPASSWD: ALL' regexp='^{{ item.username }} .*' state=present"
+  with_items: '{{users}}'
+
+- name: Remove users
+  user: name={{ item.username }} state=absent  remove=yes
+  with_items: '{{ remove_users }}'
+  ignore_errors: yes # continue with the playbook

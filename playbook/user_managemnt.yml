@@ -1,0 +1,9 @@
+---
+  # Ansible Playbook for configuring User Accounts 
+
+  - hosts: eks-ng-node
+    remote_user: ec2-user
+    become: yes
+    become_method: sudo
+    roles:
+      - role: users  

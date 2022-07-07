@@ -1,0 +1,8 @@
+---
+users:
+
+  - username: test
+    use_sudo: yes
+
+remove_users:
+  - username: olduser
